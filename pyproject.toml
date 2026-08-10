@@ -115,16 +115,20 @@ name = "xgcm"
 version = "dynamic" # dynamic versioning needs better support in pixi https://github.com/prefix-dev/pixi/issues/2923#issuecomment-2598460666 . Putting `version = "dynamic"` here for now until pixi recommends something else.
 
 [tool.pixi.package.build]
-# This build backend talks to the pixi tool over a private `pixi-build-api-version`
-# contract (pixi-build is still a preview feature), so the backend version and the
-# pixi *tool* version must stay compatible. An older backend cannot resolve the
-# api-version bumped by a newer pixi -- e.g. the previous `0.4.*` backend failed to
-# solve against pixi 0.71.x+ ("no candidates for pixi-build-api-version"), which is
-# why this was bumped to `0.7.*`. If you bump the backend again, confirm the pinned
-# tool versions still solve:
-#   - CI pins the tool via `PIXI_VERSION` in .github/workflows/ci.yaml
-#   - ReadTheDocs pins it via `asdf install pixi <ver>` in readthedocs.yml
-backend = { name = "pixi-build-python", version = "0.*" }
+# Deliberately a wide range, not a single minor version. This build backend talks to the
+# pixi tool over a private `pixi-build-api-version` contract (pixi-build is still a
+# preview feature). Each backend release depends on exactly one api generation -- 0.5.2
+# needs api 4, 0.7.0 needs api 5, 0.8.5 needs api 6 -- and each pixi release provides only
+# a narrow window of generations. Pinning the backend to a minor version therefore pins a
+# narrow window of *tool* versions, and any pixi outside it fails to solve with "no
+# candidates for pixi-build-api-version": `0.4.*` broke on pixi 0.71+ (#715), and `0.7.*`
+# broke on pixi 0.76+ (#772) while also failing on pixi <0.70. Backend semver does not
+# track the api generation either (0.8.0-0.8.3 are api 5, 0.8.5 is api 6), so no
+# minor-version pin is safe. Leaving the range wide lets the solver match a backend to
+# whatever pixi a developer or CI happens to run. The bounds only exclude backends older
+# than any this project has built with, and the unreleased 1.0 -- revisit the upper bound
+# when pixi-build leaves preview.
+backend = { name = "pixi-build-python", version = ">=0.4,<1" }
 
 [tool.pixi.package.host-dependencies]
 setuptools = "*"

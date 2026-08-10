@@ -9,6 +9,17 @@
 
 ### Internal Changes
 
+- Stop pinning the `pixi-build-python` build backend to a single minor version, so that
+  `pixi install` works on any recent pixi rather than only the narrow window of tool versions
+  matching the pinned backend. The backend and the pixi tool negotiate a private
+  `pixi-build-api-version`, and pinning the backend transitively pinned that window: `0.7.*`
+  no longer solves against pixi 0.76+, just as `0.4.*` stopped solving against pixi 0.71+.
+  The range is now `>=0.4,<1` and the solver picks a compatible backend. The pixi pins in CI
+  and on ReadTheDocs are bumped to 0.76.2 and are now only about build reproducibility
+  ([#772](https://github.com/xgcm/xgcm/pull/772)).
+  By [Nick Hodgskin](https://github.com/VeckoTheGecko) and
+  [Henri Drake](https://github.com/hdrake).
+
 ### Documentation
 
 ### Bugfixes

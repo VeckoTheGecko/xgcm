@@ -16,7 +16,11 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PIXI_VERSION: "v0.72.0"
+  # Pinned for reproducible CI runs, not to match the `pixi-build-python` backend in
+  # pyproject.toml -- that range is deliberately wide, so the solver picks a backend
+  # matching whatever pixi runs here. Bump freely, ideally alongside the
+  # `asdf install pixi` pin in readthedocs.yml.
+  PIXI_VERSION: "v0.76.2"
 
 permissions: {}
 
