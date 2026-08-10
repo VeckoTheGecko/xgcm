@@ -12,9 +12,6 @@ build:
     create_environment:
       # Pin pixi to a known-good version instead of `latest`, so docs builds are
       # reproducible and a bad pixi release cannot break them without a commit here.
-      # This no longer has to track the `pixi-build-python` backend in pyproject.toml:
-      # that range is deliberately wide, so the solver picks a backend matching whatever
-      # pixi runs here.
       # Bump freely, ideally alongside `PIXI_VERSION` in ci.yaml.
       - asdf plugin add pixi
       - asdf install pixi 0.76.2
